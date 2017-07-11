@@ -16,11 +16,11 @@ Développer un affichage (console ou graphique) représentant la grille et les élé
 ### Modelisation
 
 #### Packages
-[Packages](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Package%20Structure.png)
+![Packages](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Package%20Structure.png)
 
 #### Classes
-[Classes](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Classes.png)
+![Classes](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Classes.png)
 
 #### Type hierarchy
-[Type hierarchy](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Type%20Hierarchy.png)
+![Type hierarchy](https://raw.githubusercontent.com/rbello/CorrectionRover/master/Type%20Hierarchy.png)
 
