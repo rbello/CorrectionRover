@@ -9,6 +9,8 @@ import fr.exia.rover.contracts.IMap;
 import fr.exia.rover.contracts.IMapRenderer;
 import fr.exia.rover.contracts.IMission;
 import fr.exia.rover.contracts.IMobileElement;
+import fr.exia.rover.contracts.IPath;
+import fr.exia.rover.contracts.Orientation;
 import fr.exia.rover.contracts.ex.AlreadyOccupiedCoordinateException;
 
 public class ReachLocationMission implements IMission {
@@ -36,17 +38,21 @@ public class ReachLocationMission implements IMission {
 			throw new AlreadyOccupiedCoordinateException(target);
 		
 		// Create a first path beginning from the original location
-		List<Path> paths = new ArrayList<Path>();
+		List<IPath> paths = new ArrayList<IPath>();
 		paths.add(new Path(element.getCoordinate()));
 		
-		Path found = null;
+		// Create the list of visited coordinates (faster algo)
+		List<ICoordinate> visited = new ArrayList<>();
+		
+		// Found path (futur)
+		IPath found = null;
 		
 		// Iterate to the end
 		while (true) {
 			
 			// Search the shortest path
-			Path min = null;
-			for (Path p : paths) {
+			IPath min = null;
+			for (final IPath p : paths) {
 				// The path matches the target
 				if (p.hasReachedTarget()) {
 					found = p;
@@ -58,10 +64,10 @@ public class ReachLocationMission implements IMission {
 				}
 			}
 			
-			if (min == null) break; // TODO
+			if (min == null) break;
 			
 			// Explore the shortest path
-			explore(map, paths, min, target);
+			explore(map, paths, min, target, visited);
 		}
 		
 		// Logs
@@ -69,17 +75,19 @@ public class ReachLocationMission implements IMission {
 			System.out.println("Mission was SUCCESSFUL !!");
 			System.out.println("Path found: " + found);
 			map.move(element, target);
+			element.setOrientation(Orientation.from(found.getLast(1), found.getLast()));
+			System.out.println(rdr.render(map, found));
 		}
 		else {
 			System.out.println("Mission was a FAILURE !!");
 			System.out.println("No path found");
+			System.out.println(rdr.render(map));
 		}
-		
-		// Display the map
-		System.out.println(rdr.render(map));
+
 	}
 	
-	private void explore(IMap map, List<Path> paths, Path path, ICoordinate target) {
+	private void explore(IMap map, List<IPath> paths, IPath path,
+			ICoordinate target, List<ICoordinate> visited) {
 		// Get the last coordinate (vertex) of the path
 		ICoordinate last = path.getLast();
 		
@@ -87,15 +95,21 @@ public class ReachLocationMission implements IMission {
 		paths.remove(path);
 		
 		// Fetch all paths from current location
-		for (ICoordinate c : map.getCloseCoordinates(last)) {
+		for (final ICoordinate c : map.getCloseCoordinates(last)) {
 
-			Path newPath = path.fork(c);
+			// Fork a new path to this coordinate
+			IPath newPath = path.fork(c);
 
 			// This coordinate was already visited
 			if (newPath == null) continue;
+			if (visited.contains(c)) continue;
+			
+			// Save this coordinate as visited (faster algo)
+			visited.add(c);
 			
 			// Add this new path to the list
-			paths.add(newPath);
+			if (!paths.contains(newPath))
+				paths.add(newPath);
 			
 			// Mark this path as reached
 			if (c.equals(target)) {
@@ -104,7 +118,7 @@ public class ReachLocationMission implements IMission {
 		}
 	}
 
-	public static class Path {
+	public static class Path implements IPath {
 
 		private LinkedList<ICoordinate> path = new LinkedList<>();
 		private boolean reached;
@@ -118,35 +132,77 @@ public class ReachLocationMission implements IMission {
 			this.path.add(coordinate);
 		}
 
+		@Override
 		public void setTargetReached() {
 			reached = true;
 		}
 
+		@Override
 		public Path fork(ICoordinate c) {
 			if (path.contains(c)) return null;
 			return new Path(path, c);
 		}
 
+		@Override
 		public ICoordinate getLast() {
 			return path.getLast();
 		}
 
+		@Override
 		public int getDistance() {
 			return path.size();
 		}
 
+		@Override
 		public boolean hasReachedTarget() {
 			return reached;
 		}
 		
 		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof Path) {
+				return equals((IPath)obj);
+			}
+			return super.equals(obj);
+		}
+		
+		@Override
+		public boolean equals(IPath path) {
+			if (path.getDistance() != getDistance()) return false;
+			for (int i = 0, l = path.getDistance(); i < l; ++i)
+			{
+				if (!this.path.get(i).equals(path.getStep(i)))
+					return false;
+			}
+			return true;
+		}
+		
+		@Override
+		public ICoordinate getStep(int index) {
+			return this.path.get(index);
+		}
+
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
-			for (ICoordinate coordinate : path) {
+			for (final ICoordinate coordinate : path) {
 				if (sb.length() > 0) sb.append(" -> ");
 				sb.append(coordinate.toString());
 			}
 			return sb.toString();
+		}
+
+		@Override
+		public boolean contains(ICoordinate coordinate) {
+			for (final ICoordinate c : path) {
+				if (c.equals(coordinate)) return true;
+			}
+			return false;
+		}
+
+		@Override
+		public ICoordinate getLast(int n) {
+			return path.get(path.size() - n - 1);
 		}
 		
 	}

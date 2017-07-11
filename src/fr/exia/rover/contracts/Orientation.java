@@ -42,4 +42,12 @@ public enum Orientation {
 		return valueOf(nextval);
 	}
 
+	public static Orientation from(ICoordinate a, ICoordinate b) {
+		if (b.getX() > a.getX()) return EAST;
+		if (b.getX() < a.getX()) return WEST;
+		if (b.getY() > a.getY()) return SOUTH;
+		if (b.getY() < a.getY()) return NORTH;
+		return null;
+	}
+
 }
