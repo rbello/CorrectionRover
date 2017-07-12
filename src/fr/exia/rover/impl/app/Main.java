@@ -23,7 +23,7 @@ public class Main {
 		map.getCoordinate(0, 0).setElement(rover);
 		
 		// Display
-		IMapRenderer rdr = new ConsoleMapRenderer();
+		IMapRenderer<String> rdr = new ConsoleMapRenderer();
 		System.out.println(rdr.render(map));
 		
 		// Input

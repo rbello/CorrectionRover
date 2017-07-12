@@ -5,14 +5,14 @@ import fr.exia.rover.contracts.IMap;
 import fr.exia.rover.contracts.IMapRenderer;
 import fr.exia.rover.contracts.IPath;
 
-public class ConsoleMapRenderer implements IMapRenderer {
+public class ConsoleMapRenderer implements IMapRenderer<String> {
 	
 	public String render(IMap map) {
 		return render(map, null);
 	}
 
 	@Override
-	public String render(IMap map, IPath path) {
+	public String render(IMap map, IPath<ICoordinate> path) {
 		StringBuilder sb = new StringBuilder();
 		sb.append('.');
 		for (int i = 0; i < map.getWidth(); ++i)

@@ -2,8 +2,14 @@ package fr.exia.rover.contracts;
 
 public interface IMobileElement extends IElement {
 
-	Orientation getOrientation();
+	/**
+	 * Get the current magnetic orientation of the mobile element.
+	 */
+	EOrientation getOrientation();
 
-	void setOrientation(Orientation orientation);
+	/**
+	 * Set the current magnetic orientation of the mobile element.
+	 */
+	void setOrientation(EOrientation orientation);
 
 }

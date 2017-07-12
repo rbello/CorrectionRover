@@ -2,19 +2,19 @@ package fr.exia.rover.impl.elements;
 
 import fr.exia.rover.contracts.IMap;
 import fr.exia.rover.contracts.IMobileElement;
-import fr.exia.rover.contracts.Orientation;
+import fr.exia.rover.contracts.EOrientation;
 
 public class Rover extends AbstractElement implements IMobileElement {
 
-	private Orientation orientation;
+	private EOrientation orientation;
 
 	public Rover(IMap map) {
 		super(map, 'R');
-		setOrientation(Orientation.NORTH);
+		setOrientation(EOrientation.NORTH);
 	}
 	
 	@Override
-	public void setOrientation(Orientation value) {
+	public void setOrientation(EOrientation value) {
 		this.orientation = value;
 	}
 	
@@ -24,7 +24,7 @@ public class Rover extends AbstractElement implements IMobileElement {
 	}
 
 	@Override
-	public Orientation getOrientation() {
+	public EOrientation getOrientation() {
 		return orientation;
 	}
 

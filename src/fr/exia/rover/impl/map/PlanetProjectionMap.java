@@ -7,7 +7,7 @@ import fr.exia.rover.contracts.ICoordinate;
 import fr.exia.rover.contracts.IElement;
 import fr.exia.rover.contracts.IMap;
 import fr.exia.rover.contracts.IMobileElement;
-import fr.exia.rover.contracts.Orientation;
+import fr.exia.rover.contracts.EOrientation;
 import fr.exia.rover.contracts.ex.AlreadyOccupiedCoordinateException;
 import fr.exia.rover.contracts.ex.OutOfMapCoordinateException;
 
@@ -97,7 +97,7 @@ public class PlanetProjectionMap implements IMap {
 	}
 
 	@Override
-	public ICoordinate getCloseCoordinate(ICoordinate coordinate, Orientation orientation) {
+	public ICoordinate getCloseCoordinate(ICoordinate coordinate, EOrientation orientation) {
 		int x = coordinate.getX(), y = coordinate.getY();
 		switch (orientation) {
 		case NORTH: y -= 1; break;
@@ -126,13 +126,12 @@ public class PlanetProjectionMap implements IMap {
 	@Override
 	public List<ICoordinate> getCloseCoordinates(ICoordinate coordinate) {
 		List<ICoordinate> result = new ArrayList<>();
-		for (Orientation orientation : Orientation.values()) {
+		for (EOrientation orientation : EOrientation.values()) {
 			ICoordinate c = getCloseCoordinate(coordinate, orientation);
 			if (!c.hasElement())
 				result.add(c);
 		}
 		return result;
 	}
-
 
 }

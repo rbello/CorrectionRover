@@ -1,12 +1,12 @@
 package fr.exia.rover.impl.missions;
 
-import fr.exia.rover.contracts.Direction;
+import fr.exia.rover.contracts.EDirection;
 import fr.exia.rover.contracts.ICoordinate;
 import fr.exia.rover.contracts.IMap;
 import fr.exia.rover.contracts.IMapRenderer;
 import fr.exia.rover.contracts.IMission;
 import fr.exia.rover.contracts.IMobileElement;
-import fr.exia.rover.contracts.Orientation;
+import fr.exia.rover.contracts.EOrientation;
 
 public class OrdersSequenceMission implements IMission {
 
@@ -17,17 +17,19 @@ public class OrdersSequenceMission implements IMission {
 	}
 
 	@Override
-	public void execute(IMobileElement element, IMap map, IMapRenderer rdr) throws Exception {
+	public void execute(IMobileElement element, IMap map, IMapRenderer<?> rdr)
+			throws Exception {
+		
 		System.out.println("New mission: execute sequence of " + orders.length + " moves");
 		
 		for (String order : this.orders) {
 			
 			// Convert input char to valid direction (R,L,F,B)
-			Direction direction = Direction.valueOfString(order);
+			EDirection direction = EDirection.valueOfString(order);
 			
 			// Get next orientation according to current orientation and
 			// the direction given.
-			Orientation orientation = element.getOrientation().apply(direction);
+			EOrientation orientation = element.getOrientation().rotate(direction);
 			
 			// Get the next coordinate in the given orientation
 			ICoordinate coordinate = map.getCloseCoordinate(

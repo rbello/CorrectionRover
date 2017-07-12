@@ -1,9 +1,15 @@
 package fr.exia.rover.contracts;
 
-public interface IMapRenderer {
+public interface IMapRenderer<T> {
 	
-	String render(IMap map);
+	/**
+	 * Render the map as a string.
+	 */
+	T render(IMap map);
 
-	String render(IMap map, IPath path);
+	/**
+	 * Render the map as a string and display the given path.
+	 */
+	T render(IMap map, IPath<ICoordinate> path);
 
 }
