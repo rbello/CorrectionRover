@@ -29,6 +29,7 @@ public class Main {
 		// Input
 		try (Scanner scanner = new Scanner(System.in)) {
 			while (true) {
+				
 				System.out.println("Enter a coma-separated sequence of orders using: f(orward), b(ackward), r(ight), l(eft)   (Eg. r,r,r,f,f,l,b)");
 				System.out.println("Or enter a target location using X,Y   (Eg. 10,15)");
 				System.out.println("Or enter 'exit' to shutdown");
@@ -36,10 +37,12 @@ public class Main {
 				String sentence = scanner.nextLine();
 				if ("exit".equals(sentence)) break;
 				IMission order = new MissionFactory().parse(sentence);
+				
 				if (order == null) {
 					System.err.println("Error: invalid mission syntax");
 					continue;
 				}
+				
 				try {
 					order.execute(rover, map, rdr);
 				}
